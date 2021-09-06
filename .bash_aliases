@@ -17,6 +17,7 @@ alias copy="cp -R"
 alias move="mv"
 alias remove="rm -r"
 
+# launches vim and updates file-extension to specific common types
 edit() {
     if [ -z $2 ]; then
         vim $1
@@ -33,6 +34,8 @@ edit() {
     fi
 }
 
+# bunch of colloqiually typed `ls` functions that more simply allow you to
+# filter on the type of files or folders being returned
 list() {
     if [ -z $1 ]; then
         # default behavior of list that's being aliased
@@ -87,6 +90,7 @@ list() {
     fi
 }
 
+# create a new file or folder but don't necessarily fill them
 new() {
     if [ "$1" = "file" ]; then
         touch $2
@@ -98,7 +102,6 @@ new() {
     fi
 }
 
-# python's virtual env system is a mess, let's use aliases to simplify
 file-exists() {
     if [ -f "$1" ]; then
         return 0
