@@ -1,7 +1,13 @@
 _liminal-init-check() {
-    if ! folder-exists $HOME/.liminal; then
+    if ! [ -d $HOME/.liminal ]; then
         echo "Initializing environment repo at $HOME/.liminal"
         mkdir $HOME/.liminal
+    fi
+
+    pyver=$(python3 --version)
+    if ! [ -d "$HOME/.liminal/$pyver" ]; then
+        echo "Initializing version folder at $HOME/.liminal for $pyver"
+        mkdir "$HOME/.liminal/$pyver"
     fi
     return 0
 }
@@ -9,15 +15,16 @@ _liminal-init-check() {
 liminal-help() {
     echo "\nUsage:\n  liminal <command> [options]"
     echo "\nCommands:"
-    echo "  help\t\tShow this help message and exit"
-    echo "  list\t\tList all existing virtual environments"
-    echo "  activate\t\tActivates an existing virtual environment"
-    echo "  new\t\tCreate a new virtual environment"
-    echo "  remove\tRemove an existing virtual environment"
+    echo "    help           Show this help message and exit"
+    echo "    list           List all existing virtual environments"
+    echo "    activate       Activates an existing virtual environment"
+    echo "    new            Create a new virtual environment"
+    echo "    remove         Remove an existing virtual environment"
 }
 
 liminal-list() {
-    for value in $(ls -d $HOME/.liminal/*/); do
+    pyver=$(python3 --version)
+    for value in $(ls -d "$HOME/.liminal/$pyver/*/"); do
         echo "[$(basename $value)] - ${value}"
     done
     return 0
@@ -25,33 +32,37 @@ liminal-list() {
 
 liminal-activate() {
 
-    if ! folder-exists $HOME/.liminal/$1; then
+    pyver=$(python3 --version)
+    if ! [ -d "$HOME/.liminal/$pyver/$1" ]; then
         echo "FAIL: Environment $1 does not exists!"
         return 1
     fi
-    source $HOME/.liminal/$1/bin/activate
+    source "$HOME/.liminal/$pyver/$1/bin/activate"
     return 0
 }
 
 liminal-new() {
 
-    if folder-exists $HOME/.liminal/$1; then
+    pyver=$(python3 --version)
+    if [ -d "$HOME/.liminal/$pyver/$1" ]; then
         echo "FAIL: Environment $1 already exists!"
         return 1
     fi
-    python3 -m venv $HOME/.liminal/$1
-    source $HOME/.liminal/$1/bin/activate
+    
+    python3 -m venv "$HOME/.liminal/$pyver/$1"
+    source "$HOME/.liminal/$pyver/$1/bin/activate"
     pip install --upgrade pip ipykernel ipython
-    python -m ipykernel install --user --name $1 --display-name "$1 ($(python --version))"
+    python -m ipykernel install --user --name $1 --display-name "$1 ($pyver)"
 }
 
 liminal-remove() {
 
-    if ! folder-exists $HOME/.liminal/$1; then
+    pyver=$(python3 --version)
+    if ! [ -d "$HOME/.liminal/$pyver/$1" ]; then
         echo "FAIL: Environment $1 does not exist!"
         return 1
     fi
-    rm -rf $HOME/.liminal/$1
+    rm -rf "$HOME/.liminal/$pyver/$1"
     return 0
 }
 
