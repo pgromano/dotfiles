@@ -1,9 +1,14 @@
 _liminal-init-check() {
+    # ensure that pyenv is properly set up for shell
+    eval "$(pyenv init --path)"
+
+    # make sure a base liminal directory exists
     if ! [ -d $HOME/.liminal ]; then
         echo "Initializing environment repo at $HOME/.liminal"
         mkdir $HOME/.liminal
     fi
 
+    # make sure that a python3 specific folder exists
     pyver=$(python3 --version)
     if ! [ -d "$HOME/.liminal/$pyver" ]; then
         echo "Initializing version folder at $HOME/.liminal for $pyver"
