@@ -18,16 +18,56 @@ liminal-help() {
     echo "    help           Show this help message and exit"
     echo "    list           List all existing virtual environments"
     echo "    activate       Activates an existing virtual environment"
-    echo "    new            Create a new virtual environment"
+    echo "    create         Create a new virtual environment"
     echo "    remove         Remove an existing virtual environment"
+    echo "    install        Install a new python version"
+    echo "    uninstall      Uninstall an existing python version"
+    echo "    uninstall      Switch between existing python versions"
+}
+
+liminal-list-env() {
+    pyver=$(python3 --version)
+    echo "\n$pyver: Available Virtual Environments"
+    if [ -d "$HOME/.liminal/$pyver/" ];then
+        for value in $(ls "$HOME/.liminal/$pyver"); do
+            echo "  $value"
+        done
+    else
+        echo "  No virtual environments found!"
+    fi
+        echo ""
+    return 0
+}
+
+liminal-list-ver() {
+
+    if [ -z $1 ]; then
+        echo "\nAvailable Python Versions"
+        pyenv install --list | grep -E "^  [0-9](\.[0-9]{1,2})+$"
+    elif [ "$1" = "--all-sources" ];then
+        echo "\nAvailable Python Versions"
+        pyenv install --list
+    elif [ "$1" = "--installed" ];then
+        echo "\nPython Versions Installed"
+        pyenv versions
+    else
+        echo "\nAvailable Python Versions"
+        pyenv install --list | grep -E "^  ${1}(\.[0-9]{1,2})+$"
+    fi
+    return 0
 }
 
 liminal-list() {
-    pyver=$(python3 --version)
-    for value in $(ls -d "$HOME/.liminal/$pyver/*/"); do
-        echo "[$(basename $value)] - ${value}"
-    done
-    return 0
+    if [ -z $1 ];then
+        liminal-list-env
+    elif [ "$1" = "env" ];then
+        liminal-list-env
+    elif [ "$1" = "ver" ];then
+        liminal-list-ver $2
+    else
+        echo "FAIL: Unable to interpret argument list $1!"
+        return 1
+    fi
 }
 
 liminal-activate() {
@@ -41,7 +81,7 @@ liminal-activate() {
     return 0
 }
 
-liminal-new() {
+liminal-create() {
 
     pyver=$(python3 --version)
     if [ -d "$HOME/.liminal/$pyver/$1" ]; then
@@ -51,8 +91,8 @@ liminal-new() {
     
     python3 -m venv "$HOME/.liminal/$pyver/$1"
     source "$HOME/.liminal/$pyver/$1/bin/activate"
-    pip install --upgrade pip ipykernel ipython
-    python -m ipykernel install --user --name $1 --display-name "$1 ($pyver)"
+    python3 -m pip install --upgrade pip ipykernel ipython
+    python3 -m ipykernel install --user --name $1 --display-name "$1 ($pyver)"
 }
 
 liminal-remove() {
@@ -66,19 +106,42 @@ liminal-remove() {
     return 0
 }
 
+liminal-install() {
+    pyenv install $1
+    mkdir "$HOME/.liminal/Python {$1}"
+    return 0
+}
+
+liminal-uninstall() {
+    pyenv uninstall $1
+    rm -rf "$HOME/.liminal/Python {$1}"
+    return 0
+}
+
+liminal-switch() {
+    pyenv global $1
+    return 0
+}
+
 liminal() {
     if [ -z $1 ];then
         liminal-help
     elif [ "$1" = "help" ]; then
         liminal-help
     elif [ "$1" = "list" ]; then
-        liminal-list
+        liminal-list $2 $3
     elif [ "$1" = "activate" ]; then
         liminal-activate $2
-    elif [ "$1" = "new" ]; then
-        liminal-new $2
+    elif [ "$1" = "create" ]; then
+        liminal-create $2
     elif [ "$1" = "remove" ]; then
         liminal-remove $2
+    elif [ "$1" = "install" ]; then
+        liminal-install $2
+    elif [ "$1" = "uninstall" ]; then
+        liminal-uninstall $2
+    elif [ "$1" = "switch" ]; then
+        liminal-switch $2
     else
         echo "FAIL: Unable to interpret liminal method $1"
         return 1
