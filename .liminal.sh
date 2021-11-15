@@ -23,11 +23,23 @@ liminal-help() {
     echo "    help           Show this help message and exit"
     echo "    list           List all existing virtual environments"
     echo "    activate       Activates an existing virtual environment"
+    echo "    deactivate     Deactivates current virtual environment"
     echo "    create         Create a new virtual environment"
     echo "    remove         Remove an existing virtual environment"
-    echo "    install        Install a new python version"
-    echo "    uninstall      Uninstall an existing python version"
-    echo "    uninstall      Switch between existing python versions"
+    echo "    install        Install a new Python version"
+    echo "    uninstall      Uninstall an existing Python version"
+    echo "    switch         Switch between existing Python versions"
+    echo "    status         Display info about the current active env and Python version"
+}
+
+liminal-status() {
+    echo "$(python3 --version)"
+    echo "    Python Path: $(which python3)"
+    if [ -z $VIRTUAL_ENV ];then
+        echo "    Virtual Environment: None"
+    else
+        echo "    Virtual Environment: $VIRTUAL_ENV"
+    fi
 }
 
 liminal-list-env() {
@@ -86,6 +98,11 @@ liminal-activate() {
     return 0
 }
 
+liminal-deactivate() {
+    deactivate
+    return 0
+}
+
 liminal-create() {
 
     pyver=$(python3 --version)
@@ -137,6 +154,8 @@ liminal() {
         liminal-list $2 $3
     elif [ "$1" = "activate" ]; then
         liminal-activate $2
+    elif [ "$1" = "deactivate" ]; then
+        deactivate
     elif [ "$1" = "create" ]; then
         liminal-create $2
     elif [ "$1" = "remove" ]; then
@@ -147,6 +166,8 @@ liminal() {
         liminal-uninstall $2
     elif [ "$1" = "switch" ]; then
         liminal-switch $2
+    elif [ "$1" = "status" ]; then
+        liminal-status
     else
         echo "FAIL: Unable to interpret liminal method $1"
         return 1
