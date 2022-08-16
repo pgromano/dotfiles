@@ -11,15 +11,14 @@ alert-help() {
     echo "\nUsage:\n  alert <command> [options]"
     echo "\nCommands:"
     echo "    help           Show this help message and exit"
-    echo "    list           List all existing virtual environments"
-    echo "    activate       Activates an existing virtual environment"
-    echo "    deactivate     Deactivates current virtual environment"
-    echo "    create         Create a new virtual environment"
-    echo "    remove         Remove an existing virtual environment"
-    echo "    install        Install a new Python version"
-    echo "    uninstall      Uninstall an existing Python version"
-    echo "    switch         Switch between existing Python versions"
-    echo "    status         Display info about the current active env and Python version"
+    echo "    list           List all macOS sounds"
+    echo "    set            Sets default sound"
+    echo "    test           Plays a given sound"
+    echo "    soft           Plays default sound at soft volume"
+    echo "    medium         Plays default sound at medium volume (default)"
+    echo "    loud           Plays default sound at loud volume"
+    echo "    blast          Plays default sound at very loud volume"
+    echo "    danger         Plays default sound at dangerously loud volume"
 }
 
 
