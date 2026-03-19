@@ -10,7 +10,7 @@ export VIRTUAL_ENV_DISABLE_PROMPT=1
 blub_left=''
 blub_right=''
 
-prompt_symbol='>>>'
+prompt_symbol=''
 
 user_symbol='%n'
 user_machine_symbol='@'
@@ -25,7 +25,7 @@ git_added_symbol='+'
 git_deleted_symbol='-'
 git_renamed_symbol='~'
 git_untracked_symbol='?'
-git_copied_symbol=''
+git_copied_symbol=''
 git_unmerged_symbol='󰽜'
 git_stashed_symbol='$'
 
