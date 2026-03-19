@@ -1,9 +1,5 @@
 # alias to allow source refresh regardless of shell
-if [ "$SHELL" = "/bin/zsh" ];then
-    alias refresh="source ~/.zshrc"
-elif [ "$SHELL" = "/bin/bash" ];then
-    alias refresh="source ~/.bash_profile"
-fi
+alias refresh="source ~/.zshrc && clear"
 
 # automatically expand all aliases
 alias -g '$= '
