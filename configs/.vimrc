@@ -11,14 +11,13 @@ set autoread                    " reload files changed outside vim
 " UI
 " ============================================================
 set number                      " line numbers
-" set relativenumber              " relative line numbers (great for jumps)
 set ruler
 set showcmd
 set showmatch                   " highlight matching brackets
 set cursorline                  " highlight current line
 set scrolloff=8                 " keep 8 lines above/below cursor
 set colorcolumn=88              " PEP8-ish column marker (black uses 88)
-set signcolumn=yes              " always show sign column (for linting etc.)
+"set signcolumn=yes              " always show sign column (for linting etc.)
 set nowrap
 
 " ============================================================
