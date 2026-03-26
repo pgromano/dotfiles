@@ -1,0 +1,13 @@
+# data stuff
+numpy
+pandas
+scipy
+
+# ml
+scikit-learn
+sentence-transformers
+torch
+
+# viz
+matplotlib
+seaborn
